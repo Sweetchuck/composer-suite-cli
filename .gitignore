@@ -1,0 +1,15 @@
+
+/artifacts/
+
+/tests/_data/fixtures/project_*/composer.*.json
+/tests/_log/
+/tests/_support/_generated/
+/tests/*.suite.yml
+/codeception.yml
+
+/vendor/
+
+/.git-hooks.local
+/composer-suite.phar
+/robo.yml
+/phpstan.neon

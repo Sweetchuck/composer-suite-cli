@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/symfony/dependency-injection/5.4/Loader/schema/dic/services/services-1.0.xsd">
+
+    <parameters />
+
+    <services>
+        <service
+            shared="true"
+            id="logger"
+            class="Psr\Log\LoggerInterface">
+        </service>
+
+        <service
+            shared="true"
+            id="filesystem"
+            class="Symfony\Component\Filesystem\Filesystem" />
+
+        <service
+            shared="true"
+            id="composer_suite_handler"
+            class="Sweetchuck\ComposerSuiteHandler\SuiteHandler" />
+    </services>
+</container>

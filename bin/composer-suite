@@ -1,0 +1,49 @@
+#!/usr/bin/env php
+<?php
+
+use Sweetchuck\ComposerSuiteCli\Application;
+
+$isPhar = extension_loaded('Phar') && \Phar::running();
+$projectRoot = $isPhar ? \Phar::running() : '.';
+
+$vendorDir = 'vendor';
+if (!is_dir("$projectRoot/$vendorDir")) {
+    $composerFileName = 'composer.json';
+    if (!$isPhar && getenv('COMPOSER')) {
+        $composerFileName = getenv('COMPOSER');
+    }
+
+    $composer = json_decode(
+        file_get_contents("$projectRoot/$composerFileName") ?: '{}',
+        true,
+    );
+    if (isset($composer['config']['vendor-dir'])) {
+        $vendorDir = $composer['config']['vendor-dir'];
+    }
+}
+
+$vendorDirs[] = "$projectRoot/$vendorDir";
+$vendorDirs[] = __DIR__ . '/../../..';
+$vendorDirs[] = __DIR__ . "/../$vendorDir";
+
+$autoloadPhp = null;
+foreach (array_unique($vendorDirs) as $vendorDir) {
+    if (file_exists("$vendorDir/autoload.php")
+        && file_exists("$vendorDir/sweetchuck/composer-suite-cli")
+    ) {
+        $autoloadPhp = "$vendorDir/autoload.php";
+
+        break;
+    }
+}
+
+if ($autoloadPhp === null) {
+    $autoloadPhp = __DIR__ . '/../vendor/autoload.php';
+}
+require_once $autoloadPhp;
+
+$version = '1.x-dev';
+$application = new Application('composer-suite', $version);
+$application->initialize();
+
+exit($application->run());
