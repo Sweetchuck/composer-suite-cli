@@ -1,6 +1,6 @@
 includes:
     - vendor/phpstan/phpstan-symfony/extension.neon
-    - vendor/sweetchuck/composer-suite-handler/phpstan.typeAliases.neon
+    - vendor/sweetchuck/composer-suite-handler/.phpstan/typeAliases.neon
     - .phpstan/baseline.neon
 
 parameters:

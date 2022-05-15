@@ -13,3 +13,6 @@
 /composer-suite.phar
 /robo.yml
 /phpstan.neon
+
+/composer.local.json
+/composer.local.lock

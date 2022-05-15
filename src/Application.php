@@ -4,7 +4,9 @@ declare(strict_types = 1);
 
 namespace Sweetchuck\ComposerSuiteCli;
 
+use Sweetchuck\ComposerSuiteCli\Command\ChangedPackagesList;
 use Sweetchuck\ComposerSuiteCli\Command\Generate;
+use Sweetchuck\ComposerSuiteHandler\RequireDiffer;
 use Sweetchuck\ComposerSuiteHandler\SuiteHandler;
 use Symfony\Component\Console\Application as ApplicationBase;
 use Symfony\Component\Console\Logger\ConsoleLogger;
@@ -69,6 +71,10 @@ class Application extends ApplicationBase implements ContainerAwareInterface
             $this->container->register('composer_suite_handler', SuiteHandler::class);
         }
 
+        if (!$this->container->has('composer_require_differ')) {
+            $this->container->register('composer_require_differ', RequireDiffer::class);
+        }
+
         return $this;
     }
 
@@ -81,6 +87,11 @@ class Application extends ApplicationBase implements ContainerAwareInterface
         $cmdGenerate->setContainer($this->container);
         $cmdGenerate->setLogger($this->container->get('logger'));
         $this->add($cmdGenerate);
+
+        $cmdChangedPackagesList = new ChangedPackagesList();
+        $cmdChangedPackagesList->setContainer($this->container);
+        $cmdChangedPackagesList->setLogger($this->container->get('logger'));
+        $this->add($cmdChangedPackagesList);
 
         return $this;
     }
