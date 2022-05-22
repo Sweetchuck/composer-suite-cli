@@ -37,7 +37,7 @@ class Generate extends Command implements ContainerAwareInterface, LoggerAwareIn
     protected string $composerJsonFile = 'composer.json';
 
     /**
-     * @var array<int|string, mixed>
+     * @var array<string, mixed>
      */
     protected array $composerJsonData = [];
 
