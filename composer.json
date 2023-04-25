@@ -73,8 +73,5 @@
             "Sweetchuck\\ComposerSuiteCli\\Tests\\Unit\\": "tests/unit/",
             "Sweetchuck\\ComposerSuiteCli\\Tests\\": "tests/_support/"
         }
-    },
-    "scripts": {},
-    "scripts-descriptions": {},
-    "extra": {}
+    }
 }
