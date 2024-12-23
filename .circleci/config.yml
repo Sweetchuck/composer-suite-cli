@@ -1,4 +1,3 @@
-
 version: 2.1
 
 orbs:
@@ -19,7 +18,6 @@ executors:
         environment:
             <<: *env_common
             <<: *env_composer
-
         docker:
             -
                 name: 'main'
@@ -30,7 +28,6 @@ executors:
         environment:
             <<: *env_common
             <<: *env_composer
-
         docker:
             -
                 name: 'main'
@@ -41,7 +38,6 @@ executors:
         environment:
             <<: *env_common
             <<: *env_composer
-
         docker:
             -
                 name: 'main'
@@ -52,7 +48,6 @@ executors:
         environment:
             <<: *env_common
             <<: *env_composer
-
         docker:
             -
                 name: 'main'
@@ -63,11 +58,20 @@ executors:
         environment:
             <<: *env_common
             <<: *env_composer
-
         docker:
             -
                 name: 'main'
                 image: 'cimg/php:8.3'
+
+    php_plus5:
+        resource_class: 'small'
+        environment:
+            <<: *env_common
+            <<: *env_composer
+        docker:
+            -
+                name: 'main'
+                image: 'cimg/php:8.4'
 
 commands:
     install_php_extension_pcov:
@@ -282,6 +286,7 @@ workflows:
                                 - 'php_plus2'
                                 - 'php_plus3'
                                 - 'php_plus4'
+                                - 'php_plus5'
             -
                 release_publish:
                     filters:
@@ -296,3 +301,4 @@ workflows:
                         - 'test_php_plus2'
                         - 'test_php_plus3'
                         - 'test_php_plus4'
+                        - 'test_php_plus5'
