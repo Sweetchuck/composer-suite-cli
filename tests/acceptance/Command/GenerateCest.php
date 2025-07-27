@@ -20,10 +20,7 @@ class GenerateCest
         $this->clearComposerSuites();
     }
 
-    /**
-     * @return $this
-     */
-    protected function clearComposerSuites()
+    protected function clearComposerSuites(): static
     {
         $fs = new Filesystem();
         $fixturesDir = codecept_data_dir('fixtures');

@@ -1,0 +1,102 @@
+parameters:
+    typeAliases:
+        suite-composer-json: '''
+            array{
+                config?: array<string, mixed>,
+                repositories?: array<string, mixed>,
+                require?: array<string, string>,
+                require-dev?: array<string, string>,
+            }
+        '''
+        suite-definition: '''
+            array{
+                source?: string,
+                name?: string,
+                description?: string,
+                actions?: suite-action-list,
+            }
+        '''
+        suite-action-list: '''
+            array<suite-action-defs>
+        '''
+        suite-action-defs: '''
+            suite-action-def-replace-recursive|suite-action-def-unset|suite-action-def-prepend|suite-action-def-append|suite-action-def-insert-before|suite-action-def-insert-after|suite-action-def-sort-normal
+        '''
+        suite-action-def-replace-recursive: '''
+            array{
+                type: "replaceRecursive",
+                config: suite-action-config-basic,
+            }
+        '''
+        suite-action-def-unset: '''
+            array{
+                type: "unset",
+                config: suite-action-config-basic,
+            }
+        '''
+        suite-action-def-prepend: '''
+            array{
+                type: "prepend",
+                config: suite-action-config-basic,
+            }
+        '''
+        suite-action-def-append: '''
+            array{
+                type: "append",
+                config: suite-action-config-basic,
+            }
+        '''
+        suite-action-def-insert-before: '''
+            array{
+                type: "insertBefore",
+                config: suite-action-config-insert,
+            }
+        '''
+        suite-action-def-insert-after: '''
+            array{
+                type: "insertAfter",
+                config: suite-action-config-insert,
+            }
+        '''
+        suite-action-def-sort-normal: '''
+            array{
+                type: "sortNormal",
+                config: suite-action-config-sort-normal,
+            }
+        '''
+        suite-action-config-basic: '''
+            array{
+                parents?: array<string>,
+                items?: array<mixed>,
+            }
+        '''
+        suite-action-config-insert: '''
+            array{
+                parents?: array<string>,
+                items?: array<mixed>,
+                placement?: "before"|"after",
+            }
+        '''
+        suite-action-config-sort-normal: '''
+            array{
+                parents?: array<string>,
+                function?: string,
+                params?: array<mixed>,
+            }
+        '''
+        suite-package-diff: '''
+            array{
+                repository?: array{
+                    old: null|string,
+                    new: null|string,
+                },
+                moved?: array{
+                    old: string,
+                    new: string,
+                },
+                constraint?: array{
+                    old: null|string,
+                    new: null|string,
+                },
+            }
+        '''

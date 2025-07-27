@@ -1,0 +1,9 @@
+parameters:
+    typeAliases:
+        dev-suite-handler-suite-file-name-test-case: '''
+            array{
+                config?: array<string, mixed>,
+                require?: array<string, string>,
+                require-dev?: array<string, string>,
+            }
+        '''

@@ -1,0 +1,15 @@
+parameters:
+	bootstrapFiles:
+		- ./bootstrap.php
+	symfony:
+		containerXmlPath: ./services.xml
+	level: 7
+	paths:
+		- ../src/
+		- ../tests/
+		- ../RoboFile.php
+	excludePaths:
+		analyse:
+			- '../tests/_support/_generated/ (?)'
+		analyseAndScan:
+			- '../tests/_output/ (?)'

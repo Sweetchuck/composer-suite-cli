@@ -11,20 +11,13 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
-class ChangedPackagesList extends Command implements ContainerAwareInterface, LoggerAwareInterface
+class ChangedPackagesList extends Command implements LoggerAwareInterface
 {
-    use ContainerAwareTrait;
     use LoggerAwareTrait;
-
-    /**
-     * {@inheritdoc}
-     */
-    protected static $defaultName = 'changed-packages:list';
 
     protected Filesystem $fs;
 
@@ -45,12 +38,28 @@ class ChangedPackagesList extends Command implements ContainerAwareInterface, Lo
         'diff' => [],
     ];
 
+    protected ?ContainerInterface $container = null;
+
+    public function setContainer(ContainerInterface $container): static
+    {
+        $this->container = $container;
+
+        return $this;
+    }
+
+    public function getContainer(): ContainerInterface
+    {
+        if (!$this->container) {
+            throw new \LogicException();
+        }
+
+        return $this->container;
+    }
+
     /**
      * {@inheritdoc}
-     *
-     * @return void
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Lists the changed packages between composer.json and the composer.ACTUAL.json')
@@ -65,11 +74,8 @@ class ChangedPackagesList extends Command implements ContainerAwareInterface, Lo
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->fs = $this->container->get('filesystem');
-        $this->requireDiffer = $this->container->get('composer_require_differ');
-
         try {
             $this
                 ->validate($input)
@@ -86,12 +92,8 @@ class ChangedPackagesList extends Command implements ContainerAwareInterface, Lo
         return $this->result['exitCode'];
     }
 
-    /**
-     * @return $this
-     */
-    protected function validate(InputInterface $input)
+    protected function validate(InputInterface $input): static
     {
-        $this->fs = $this->container->get('filesystem');
         $this->workingDirectory = $input->getArgument('working-directory');
         if ($this->workingDirectory === '') {
             $this->workingDirectory = '.';
@@ -114,10 +116,7 @@ class ChangedPackagesList extends Command implements ContainerAwareInterface, Lo
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    protected function executeCalculateDiff()
+    protected function executeCalculateDiff(): static
     {
         $actualComposerJson = Path::join(
             $this->workingDirectory,

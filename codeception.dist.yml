@@ -6,7 +6,7 @@ bootstrap: '../vendor/autoload.php'
 paths:
     data: 'tests/_data'
     envs: 'tests/_envs'
-    log: 'tests/_log'
+    output: 'tests/_output'
     support: 'tests/_support'
     tests: 'tests'
 

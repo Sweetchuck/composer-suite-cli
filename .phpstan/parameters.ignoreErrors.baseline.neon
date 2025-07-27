@@ -71,12 +71,6 @@ parameters:
 			path: ../src/Application.php
 
 		-
-			message: "#^Property Sweetchuck\\\\ComposerSuiteCli\\\\Command\\\\ChangedPackagesList\\:\\:\\$requireDiffer \\(Sweetchuck\\\\ComposerSuiteHandler\\\\RequireDiffer\\) does not accept object\\|null\\.$#"
-			count: 1
-			path: ../src/Command/ChangedPackagesList.php
-
-		-
 			message: "#^Property Sweetchuck\\\\ComposerSuiteCli\\\\Command\\\\Generate\\:\\:\\$composerJsonData \\(array\\<string, mixed\\>\\) does not accept array\\<int\\|string, mixed\\>\\.$#"
 			count: 1
 			path: ../src/Command/Generate.php
-

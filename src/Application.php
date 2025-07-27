@@ -11,8 +11,6 @@ use Sweetchuck\ComposerSuiteHandler\SuiteHandler;
 use Symfony\Component\Console\Application as ApplicationBase;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition as ServiceDefinition;
@@ -20,21 +18,31 @@ use Symfony\Component\DependencyInjection\Reference as ServiceReference;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * @property \Symfony\Component\DependencyInjection\ContainerBuilder $container
+ * @property ?\Symfony\Component\DependencyInjection\ContainerBuilder $container
  */
-class Application extends ApplicationBase implements ContainerAwareInterface
+class Application extends ApplicationBase
 {
-    use ContainerAwareTrait;
+
+    protected ?ContainerInterface $container = null;
+
+    public function setContainer(ContainerInterface $container): static
+    {
+        // @phpstan-ignore-next-line
+        $this->container = $container;
+
+        return $this;
+    }
 
     public function getContainer(): ContainerInterface
     {
+        if (!$this->container) {
+            $this->initializeContainer();
+        }
+
         return $this->container;
     }
 
-    /**
-     * @return $this
-     */
-    public function initialize()
+    public function initialize(): static
     {
         $this
             ->initializeContainer()
@@ -43,10 +51,7 @@ class Application extends ApplicationBase implements ContainerAwareInterface
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    protected function initializeContainer()
+    protected function initializeContainer(): static
     {
         if ($this->container === null) {
             $this->container = new ContainerBuilder();
@@ -78,17 +83,14 @@ class Application extends ApplicationBase implements ContainerAwareInterface
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    protected function initializeCommands()
+    protected function initializeCommands(): static
     {
-        $cmdGenerate = new Generate();
+        $cmdGenerate = new Generate('generate');
         $cmdGenerate->setContainer($this->container);
         $cmdGenerate->setLogger($this->container->get('logger'));
         $this->add($cmdGenerate);
 
-        $cmdChangedPackagesList = new ChangedPackagesList();
+        $cmdChangedPackagesList = new ChangedPackagesList('changed-packages:list');
         $cmdChangedPackagesList->setContainer($this->container);
         $cmdChangedPackagesList->setLogger($this->container->get('logger'));
         $this->add($cmdChangedPackagesList);

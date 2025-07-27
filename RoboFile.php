@@ -19,7 +19,7 @@ use Sweetchuck\Robo\Composer\ComposerTaskLoader;
 use Sweetchuck\Robo\Git\GitTaskLoader;
 use Sweetchuck\Robo\Phpcs\PhpcsTaskLoader;
 use Sweetchuck\Robo\Phpstan\PhpstanTaskLoader;
-use Sweetchuck\Utils\Filter\ArrayFilterEnabled;
+use Sweetchuck\Utils\Filter\EnabledFilter;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -193,20 +193,14 @@ class RoboFile extends Tasks implements LoggerAwareInterface, ConfigAwareInterfa
         return ($output instanceof ConsoleOutputInterface) ? $output->getErrorOutput() : $output;
     }
 
-    /**
-     * @return $this
-     */
-    protected function initEnvVarNamePrefix()
+    protected function initEnvVarNamePrefix(): static
     {
         $this->envVarNamePrefix = strtoupper(str_replace('-', '_', $this->packageName));
 
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    protected function initEnvironmentTypeAndName()
+    protected function initEnvironmentTypeAndName(): static
     {
         $this->environmentType = (string) getenv($this->getEnvVarName('environment_type'));
         $this->environmentName = (string) getenv($this->getEnvVarName('environment_name'));
@@ -249,10 +243,7 @@ class RoboFile extends Tasks implements LoggerAwareInterface, ConfigAwareInterfa
         return "{$this->envVarNamePrefix}_" . strtoupper($name);
     }
 
-    /**
-     * @return $this
-     */
-    protected function initComposerInfo()
+    protected function initComposerInfo(): static
     {
         $composerFileName = getenv('COMPOSER') ?: 'composer.json';
         if ($this->composerInfo || !is_readable($composerFileName)) {
@@ -269,10 +260,7 @@ class RoboFile extends Tasks implements LoggerAwareInterface, ConfigAwareInterfa
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    protected function initCodeceptionInfo()
+    protected function initCodeceptionInfo(): static
     {
         if ($this->codeceptionInfo) {
             return $this;
@@ -281,7 +269,7 @@ class RoboFile extends Tasks implements LoggerAwareInterface, ConfigAwareInterfa
         $default = [
             'paths' => [
                 'tests' => 'tests',
-                'log' => 'tests/_log',
+                'log' => 'tests/_output',
             ],
         ];
         $dist = [];
@@ -313,7 +301,7 @@ class RoboFile extends Tasks implements LoggerAwareInterface, ConfigAwareInterfa
 
         $phpExecutables = array_filter(
             (array) $this->getConfig()->get('php.executables'),
-            new ArrayFilterEnabled(),
+            new EnabledFilter(),
         );
 
         $cb = $this->collectionBuilder();
@@ -480,7 +468,7 @@ class RoboFile extends Tasks implements LoggerAwareInterface, ConfigAwareInterfa
             $options['lintReporters']['lintCheckstyleReporter'] = $this
                 ->getContainer()
                 ->get('lintCheckstyleReporter')
-                ->setDestination('tests/_log/machine/checkstyle/phpcs.psr2.xml');
+                ->setDestination('tests/_output/machine/checkstyle/phpcs.psr2.xml');
         }
 
         if ($this->gitHook === 'pre-commit') {
@@ -527,7 +515,7 @@ class RoboFile extends Tasks implements LoggerAwareInterface, ConfigAwareInterfa
 
         return !empty($this->codeceptionInfo['paths']['log']) ?
             $this->codeceptionInfo['paths']['log']
-            : 'tests/_log';
+            : 'tests/_output';
     }
 
     /**
@@ -558,10 +546,8 @@ class RoboFile extends Tasks implements LoggerAwareInterface, ConfigAwareInterfa
 
     /**
      * @param string[] $suiteNames
-
-     * @return $this
      */
-    protected function validateArgCodeceptionSuiteNames(array $suiteNames)
+    protected function validateArgCodeceptionSuiteNames(array $suiteNames): static
     {
         if (!$suiteNames) {
             return $this;

@@ -12,21 +12,14 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
-class Generate extends Command implements ContainerAwareInterface, LoggerAwareInterface
+class Generate extends Command implements LoggerAwareInterface
 {
 
-    use ContainerAwareTrait;
     use LoggerAwareTrait;
-
-    /**
-     * {@inheritdoc}
-     */
-    protected static $defaultName = 'generate';
 
     protected Filesystem $fs;
 
@@ -55,12 +48,28 @@ class Generate extends Command implements ContainerAwareInterface, LoggerAwareIn
         'exitCode' => 0,
     ];
 
+    protected ?ContainerInterface $container = null;
+
+    public function setContainer(ContainerInterface $container): static
+    {
+        $this->container = $container;
+
+        return $this;
+    }
+
+    public function getContainer(): ContainerInterface
+    {
+        if (!$this->container) {
+            throw new \LogicException();
+        }
+
+        return $this->container;
+    }
+
     /**
      * {@inheritdoc}
-     *
-     * @return void
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Generates alternative composer.*.json files.')
@@ -75,7 +84,7 @@ class Generate extends Command implements ContainerAwareInterface, LoggerAwareIn
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->fs = $this->container->get('filesystem');
         $this->suiteHandler = $this->container->get('composer_suite_handler');
@@ -93,10 +102,7 @@ class Generate extends Command implements ContainerAwareInterface, LoggerAwareIn
         return $this->result['exitCode'];
     }
 
-    /**
-     * @return $this
-     */
-    protected function validate(InputInterface $input)
+    protected function validate(InputInterface $input): static
     {
         $this->workingDirectory = $input->getArgument('working-directory');
         if ($this->workingDirectory === '') {
@@ -120,10 +126,7 @@ class Generate extends Command implements ContainerAwareInterface, LoggerAwareIn
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    protected function doIt()
+    protected function doIt(): static
     {
         $this->result = [
             'exitCode' => 0,
@@ -150,10 +153,7 @@ class Generate extends Command implements ContainerAwareInterface, LoggerAwareIn
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    protected function dumpSuites()
+    protected function dumpSuites(): static
     {
         foreach ($this->suiteDefinitions as $suiteDefinition) {
             $this->dumpSuite($suiteDefinition);
@@ -164,10 +164,8 @@ class Generate extends Command implements ContainerAwareInterface, LoggerAwareIn
 
     /**
      * @param suite-definition $suiteDefinition
-     *
-     * @return $this
      */
-    protected function dumpSuite(array $suiteDefinition)
+    protected function dumpSuite(array $suiteDefinition): static
     {
         $actions = $suiteDefinition['actions'] ?? [];
         $name = $suiteDefinition['name'] ?? 'unknown';
@@ -198,10 +196,7 @@ class Generate extends Command implements ContainerAwareInterface, LoggerAwareIn
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    protected function doItMessage(string $task, string $fileName)
+    protected function doItMessage(string $task, string $fileName): static
     {
         switch ($task) {
             case 'skip':

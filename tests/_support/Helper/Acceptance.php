@@ -12,14 +12,14 @@ class Acceptance extends Module
     /**
      * @var array<string>
      */
-    protected $requiredFields = [];
+    protected array $requiredFields = [];
 
     /**
      * @var array{
      *     pharPath: string,
      * }
      */
-    protected $config = [
+    protected array $config = [
         'pharPath' => './artifacts/composer-suite.phar',
     ];
 
