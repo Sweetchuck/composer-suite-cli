@@ -1,0 +1,12 @@
+parameters:
+	paths:
+		- ../src/
+		- ../tests/_support/Helper/
+		- ../tests/_support/AcceptanceTester.php
+		- ../tests/_support/UnitTester.php
+		- ../tests/acceptance/
+		- ../tests/unit/
+		- ../RoboFile.php
+	excludePaths:
+		analyze:
+			- ../tests/_support/_generated/
