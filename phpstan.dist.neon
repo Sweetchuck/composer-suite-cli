@@ -2,6 +2,7 @@ includes:
 	- vendor/phpstan/phpstan-symfony/extension.neon
 	- vendor/sweetchuck/composer-suite-handler/.phpstan/parameters.typeAliases.prod.neon
 	- .phpstan/parameters.general.neon
+	- .phpstan/parameters.paths.neon
 	- .phpstan/parameters.ignoreErrors.baseline.neon
 	- .phpstan/parameters.ignoreErrors.custom.neon
 	- .phpstan/parameters.typeAliases.dev.neon

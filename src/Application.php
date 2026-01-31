@@ -17,12 +17,12 @@ use Symfony\Component\DependencyInjection\Definition as ServiceDefinition;
 use Symfony\Component\DependencyInjection\Reference as ServiceReference;
 use Symfony\Component\Filesystem\Filesystem;
 
-/**
- * @property ?\Symfony\Component\DependencyInjection\ContainerBuilder $container
- */
 class Application extends ApplicationBase
 {
 
+    /**
+     * @var ?\Symfony\Component\DependencyInjection\ContainerBuilder
+     */
     protected ?ContainerInterface $container = null;
 
     public function setContainer(ContainerInterface $container): static

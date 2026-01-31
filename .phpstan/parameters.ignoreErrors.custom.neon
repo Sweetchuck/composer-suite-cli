@@ -1,6 +1,2 @@
 parameters:
-	ignoreErrors:
-		-
-			message: '#.*#'
-			paths:
-				- '../tests/_support/_generated/*'
+	ignoreErrors: []
